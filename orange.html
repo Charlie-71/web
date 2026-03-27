@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dolphin in Paris 🐬🥐</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FF 100%);
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    /* Eiffel Tower Background */
+    .eiffel {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      height: 420px;
+      background: linear-gradient(#2C3E50, #34495E);
+      clip-path: polygon(50% 0%, 35% 25%, 42% 100%, 48% 85%, 52% 85%, 58% 100%, 65% 25%);
+      z-index: 1;
+      opacity: 0.85;
+    }
+
+    .eiffel::before {
+      content: '';
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 180px;
+      background: #2C3E50;
+      clip-path: polygon(30% 0%, 50% 100%, 70% 0%);
+    }
+
+    /* Ground / Seine River */
+    .ground {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(#2E8B57, #228B22);
+      z-index: 2;
+    }
+
+    .river {
+      position: absolute;
+      bottom: 80px;
+      width: 100%;
+      height: 100px;
+      background: linear-gradient(to right, #1E90FF, #00BFFF);
+      opacity: 0.7;
+      z-index: 3;
+    }
+
+    /* Dolphin */
+    .dolphin-container {
+      position: absolute;
+      bottom: 120px;
+      left: 20%;
+      z-index: 10;
+      animation: swim 8s infinite ease-in-out;
+    }
+
+    .dolphin {
+      width: 220px;
+      filter: drop-shadow(15px 15px 25px rgba(0,0,0,0.3));
+    }
+
+    /* Croissant */
+    .croissant {
+      position: absolute;
+      top: -25px;
+      right: -40px;
+      width: 90px;
+      z-index: 15;
+      animation: eatCroissant 2.5s infinite alternate ease-in-out;
+    }
+
+    /* Paris Text */
+    h1 {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #2C3E50;
+      font-size: 3.2rem;
+      text-shadow: 3px 3px 10px rgba(255,255,255,0.8);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .subtitle {
+      position: absolute;
+      top: 25%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #E74C3C;
+      font-size: 1.6rem;
+      z-index: 20;
+    }
+
+    @keyframes swim {
+      0%, 100% { transform: translateY(0) rotate(-8deg); }
+      50% { transform: translateY(-35px) rotate(8deg); }
+    }
+
+    @keyframes eatCroissant {
+      0% { transform: rotate(-15deg) translateY(0); }
+      100% { transform: rotate(25deg) translateY(-8px); }
+    }
+
+    /* Bubbles */
+    .bubbles {
+      position: absolute;
+      bottom: 150px;
+      left: 25%;
+      width: 100px;
+      height: 200px;
+      z-index: 12;
+    }
+
+    .bubble {
+      position: absolute;
+      background: rgba(255,255,255,0.4);
+      border-radius: 50%;
+      animation: bubbleRise 3s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <h1>Paris 🗼</h1>
+  <p class="subtitle">Dolphin Eating Croissant 🐬🥐</p>
+
+  <!-- Eiffel Tower -->
+  <div class="eiffel"></div>
+
+  <!-- River -->
+  <div class="river"></div>
+
+  <!-- Ground -->
+  <div class="ground"></div>
+
+  <!-- Dolphin -->
+  <div class="dolphin-container">
+    <svg class="dolphin" viewBox="0 0 250 150" xmlns="http://www.w3.org/2000/svg">
+      <!-- Body -->
+      <ellipse cx="130" cy="80" rx="95" ry="55" fill="#4ECDC4"/>
+      <!-- Head -->
+      <ellipse cx="195" cy="75" rx="45" ry="38" fill="#4ECDC4"/>
+      <!-- Dorsal fin -->
+      <path d="M110 45 Q150 10 165 45" fill="#2AA89B"/>
+      <!-- Tail -->
+      <path d="M40 80 Q10 40 15 105 Q35 95 55 85" fill="#2AA89B"/>
+      <!-- Eye -->
+      <circle cx="210" cy="65" r="12" fill="#111"/>
+      <circle cx="213" cy="62" r="5" fill="#fff"/>
+      <!-- Happy mouth -->
+      <path d="M185 90 Q205 100 220 88" fill="none" stroke="#111" stroke-width="6" stroke-linecap="round"/>
+      <!-- Belly highlight -->
+      <ellipse cx="135" cy="95" rx="65" ry="32" fill="#7FFFD4" opacity="0.6"/>
+    </svg>
+
+    <!-- Croissant being eaten -->
+    <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png" 
+         class="croissant" 
+         alt="Croissant">
+  </div>
+
+  <!-- Floating bubbles -->
+  <div class="bubbles" id="bubbles"></div>
+
+  <script>
+    // Create rising bubbles near the dolphin
+    function createBubbles() {
+      const container = document.getElementById('bubbles');
+      
+      setInterval(() => {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        
+        const size = Math.random() * 14 + 8;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 60 + 20}px`;
+        bubble.style.bottom = `10px`;
+        
+        const duration = Math.random() * 2.5 + 2.5;
+        bubble.style.animationDuration = `${duration}s`;
+        
+        container.appendChild(bubble);
+        
+        setTimeout(() => bubble.remove(), duration * 1000);
+      }, 220);
+    }
+
+    window.onload = () => {
+      createBubbles();
+    };
+  </script>
+</body>
+  </html>
