@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dolphin Jump 🌊</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      background: linear-gradient(to bottom, #0a1f3d 0%, #1e4a7a 100%);
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .ocean {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 45%;
+      background: linear-gradient(to bottom, #1e90ff 0%, #00bfff 40%, #87cefa 100%);
+      border-top: 4px solid #00ffff;
+      overflow: hidden;
+    }
+
+    .wave {
+      position: absolute;
+      bottom: 0;
+      width: 200%;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      animation: wave 8s linear infinite;
+    }
+
+    .wave:nth-child(2) {
+      bottom: 20px;
+      opacity: 0.1;
+      animation-duration: 12s;
+      animation-delay: -4s;
+    }
+
+    @keyframes wave {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .rainbow {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      border-radius: 50%;
+      background: linear-gradient(
+        to right,
+        #ff0000,
+        #ff7f00,
+        #ffff00,
+        #00ff00,
+        #0000ff,
+        #4b0082,
+        #8b00ff
+      );
+      opacity: 0.75;
+      filter: blur(40px);
+      z-index: 1;
+      box-shadow: 0 0 80px rgba(255, 255, 255, 0.6);
+    }
+
+    .dolphin-container {
+      position: absolute;
+      bottom: 30%;
+      left: -150px;
+      animation: dolphinJump 6s infinite ease-in-out;
+      z-index: 10;
+    }
+
+    .dolphin {
+      width: 180px;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
+    }
+
+    @keyframes dolphinJump {
+      0% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+      }
+      25% {
+        transform: translateX(30vw) translateY(-35vh) rotate(-15deg);
+      }
+      50% {
+        transform: translateX(70vw) translateY(-55vh) rotate(0deg);
+      }
+      75% {
+        transform: translateX(110vw) translateY(-25vh) rotate(20deg);
+      }
+      100% {
+        transform: translateX(140vw) translateY(0) rotate(0deg);
+      }
+    }
+
+    .sun {
+      position: absolute;
+      top: 15%;
+      right: 15%;
+      width: 80px;
+      height: 80px;
+      background: #ffeb3b;
+      border-radius: 50%;
+      box-shadow: 0 0 60px #ffeb3b, 0 0 100px #ffd700;
+      z-index: 2;
+    }
+
+    h1 {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 3.5rem;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .bubbles {
+      position: absolute;
+      bottom: 45%;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: bubbleRise 4s linear infinite;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <h1>Dolphin Jump 🌈</h1>
+
+  <!-- Rainbow -->
+  <div class="rainbow"></div>
+
+  <!-- Sun -->
+  <div class="sun"></div>
+
+  <!-- Ocean -->
+  <div class="ocean">
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+
+  <!-- Dolphin -->
+  <div class="dolphin-container">
+    <svg class="dolphin" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Dolphin body -->
+      <path d="M30 60 Q80 20 140 45 Q180 70 150 95 Q100 110 40 85 Z" fill="#4ECDC4"/>
+      <!-- Dorsal fin -->
+      <path d="M90 45 Q110 15 125 40" fill="#2AA89B"/>
+      <!-- Tail -->
+      <path d="M30 60 Q10 40 5 65 Q10 85 30 70 Z" fill="#2AA89B"/>
+      <!-- Eye -->
+      <circle cx="120" cy="55" r="8" fill="#111"/>
+      <circle cx="122" cy="53" r="4" fill="#fff"/>
+      <!-- Mouth -->
+      <path d="M150 70 Q165 75 170 65" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+      <!-- Highlight -->
+      <path d="M50 50 Q80 40 110 48" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="12" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- Bubbles -->
+  <div class="bubbles" id="bubbles"></div>
+
+  <script>
+    // Create floating bubbles
+    function createBubbles() {
+      const bubblesContainer = document.getElementById('bubbles');
+      
+      setInterval(() => {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        
+        const size = Math.random() * 12 + 6;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${Math.random() * 100}vw`;
+        bubble.style.bottom = `-20px`;
+        bubble.style.opacity = Math.random() * 0.5 + 0.2;
+        
+        const duration = Math.random() * 3 + 3;
+        bubble.style.animationDuration = `${duration}s`;
+        
+        bubblesContainer.appendChild(bubble);
+        
+        // Remove bubble after animation
+        setTimeout(() => {
+          bubble.remove();
+        }, duration * 1000);
+      }, 180);
+    }
+
+    // Start the animation
+    window.onload = () => {
+      createBubbles();
+      
+      // Optional: Click anywhere to make the dolphin jump again
+      document.addEventListener('click', () => {
+        const dolphin = document.querySelector('.dolphin-container');
+        dolphin.style.animation = 'none';
+        setTimeout(() => {
+          dolphin.style.animation = 'dolphinJump 6s infinite ease-in-out';
+        }, 10);
+      });
+    };
+  </script>
+</body>
+  </html>
